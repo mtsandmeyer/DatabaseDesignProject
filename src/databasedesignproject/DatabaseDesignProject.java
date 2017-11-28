@@ -41,6 +41,7 @@ public class DatabaseDesignProject extends JFrame implements ActionListener {
         JTabbedPane jTabbedPane1 = new javax.swing.JTabbedPane();
         
         readPanel = new ReadPanel();
+        updatePanel = new UpdatePanel();
         // The test panel below provides examples of how the layout managers can be used.
         JPanel testPanel = new JPanel();
 
