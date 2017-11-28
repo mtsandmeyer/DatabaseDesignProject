@@ -42,6 +42,7 @@ public class DatabaseDesignProject extends JFrame implements ActionListener {
         
         readPanel = new ReadPanel();
         updatePanel = new UpdatePanel();
+        deletePanel = new DeletePanel();
         // The test panel below provides examples of how the layout managers can be used.
         JPanel testPanel = new JPanel();
 
