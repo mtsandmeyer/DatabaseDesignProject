@@ -5,6 +5,7 @@
  */
 package databasedesignproject;
 
+import java.sql.*;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -15,9 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 /**
@@ -31,6 +31,9 @@ public class DatabaseDesignProject extends JFrame implements ActionListener {
     JPanel readPanel;
     JPanel updatePanel;
     JPanel deletePanel;
+    JTextField northTextField;
+    String resultSet;
+
     
      
     public DatabaseDesignProject() {
@@ -54,15 +57,22 @@ public class DatabaseDesignProject extends JFrame implements ActionListener {
         // Add a button to handle the modal dialog.  Make it right justified on the bottom
         // using an embedded flow layout.
         JButton popupButton = new JButton();
-        popupButton.setText("Press to Get the Party Started");
+        popupButton.setText("Add new patient");
         popupButton.addActionListener(this);
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         southPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         southPanel.add(popupButton);
         
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        northPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        northTextField = new JTextField(20);
+        northPanel.add(this.northTextField);
+        
         testPanel.setLayout(new BorderLayout());
-        testPanel.add(southPanel, BorderLayout.SOUTH);
+        testPanel.add(southPanel, BorderLayout.SOUTH);        
+        testPanel.add(northPanel, BorderLayout.NORTH);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -83,19 +93,49 @@ public class DatabaseDesignProject extends JFrame implements ActionListener {
       });
     }
     
+    private String getNorthTextField() {
+        return northTextField.getText();
+    }
+    
     
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //Custom button text:  Feel free to modify.
+
+        
+        
+        try (
+         // Step 1: Allocate a database 'Connection' object
+         Connection conn = DriverManager.getConnection(
+               "jdbc:mysql://localhost:3306/seq_ref?useSSL=false", "databasemanager", "sesame");
+               // MySQL: "jdbc:mysql://hostname:port/databaseName", "username", "password"
+ 
+         // Step 2: Allocate a 'Statement' object in the Connection
+         Statement stmt = conn.createStatement();
+        ) {
+         // Step 3: Execute a SQL SELECT query, the query result
+         //  is returned in a 'ResultSet' object.
+         String strSelect = "insert into patients (yob) values (" + this.getNorthTextField() + ")";
+         System.out.println("The SQL query is: " + strSelect); // Echo For debugging
+         System.out.println();
+ 
+         ResultSet rset = stmt.executeQuery(strSelect);
+ 
+       
+        } catch(SQLException ex) {
+         ex.printStackTrace();
+        }
+        
+            //Custom button text:  Feel free to modify.
         Object[] options = {"Ok",
                             "Cancel"};
         int n = JOptionPane.showOptionDialog(this,
-            "Are you having fun yet?", "Party Popup",
+            "Patient added", "Party Popup",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE,
             null,
             options,
             options[1]);
+        
     }
 }
